@@ -97,118 +97,54 @@
         }
 
         // Create enhanced grid rectangles
-        function createGridRectangles() {
-            // Clear existing rectangles
-            gridRectangles.forEach(rect => map.removeLayer(rect));
-            gridRectangles = [];
+        // ... existing Leaflet initialization ...
 
-            const pollutant = document.getElementById('pollutant').value;
-            const dataSource = document.getElementById('data-source').value;
+function createGridRectangles() {
+    // Clear existing layers with a fade effect if possible
+    gridRectangles.forEach(rect => map.removeLayer(rect));
+    gridRectangles = [];
 
-            for (let lat = INDIA_BOUNDS.south; lat < INDIA_BOUNDS.north; lat += 0.5) {
-                for (let lng = INDIA_BOUNDS.west; lng < INDIA_BOUNDS.east; lng += 0.5) {
-                    const gridKey = `${lat.toFixed(1)}_${lng.toFixed(1)}`;
-                    const gridData = currentData[gridKey];
-                    
-                    if (gridData) {
-                        const pmValue = pollutant === 'pm25' ? gridData.pm25 : gridData.pm10;
-                        const color = getColorForPM(pmValue);
-                        
-                        const rectangle = L.rectangle([
-                            [lat, lng],
-                            [lat + 0.5, lng + 0.5]
-                        ], {
-                            color: '#ffffff',
-                            fillColor: color,
-                            fillOpacity: 0.7,
-                            weight: 1,
-                            opacity: 0.8,
-                            className: 'grid-cell'
-                        });
+    const pollutant = document.getElementById('pollutant').value;
 
-                        // Enhanced popup with better formatting
-                        const popupContent = `
-                            <div class="popup-title">Grid: ${lat.toFixed(1)}°N, ${lng.toFixed(1)}°E</div>
-                            <div>PM2.5: <span class="popup-value">${gridData.pm25} μg/m³</span></div>
-                            <div>PM10: <span class="popup-value">${gridData.pm10} μg/m³</span></div>
-                            <div>Source: <span class="popup-value">${gridData.source}</span></div>
-                            <div>Updated: <span class="popup-value">${new Date(gridData.timestamp).toLocaleString()}</span></div>
-                        `;
-                        
-                        rectangle.bindPopup(popupContent);
-
-                        // Add hover effect
-                        rectangle.on('mouseover', function() {
-                            this.setStyle({
-                                weight: 2,
-                                opacity: 1
-                            });
-                        });
-
-                        rectangle.on('mouseout', function() {
-                            this.setStyle({
-                                weight: 1,
-                                opacity: 0.8
-                            });
-                        });
-
-                        // Add click event
-                        rectangle.on('click', function() {
-                            updateMapInfo(gridData);
-                        });
-
-                        rectangle.addTo(map);
-                        gridRectangles.push(rectangle);
+    for (let lat = INDIA_BOUNDS.south; lat < INDIA_BOUNDS.north; lat += 0.5) {
+        for (let lng = INDIA_BOUNDS.west; lng < INDIA_BOUNDS.east; lng += 0.5) {
+            const gridKey = `${lat.toFixed(1)}_${lng.toFixed(1)}`;
+            const gridData = currentData[gridKey];
+            
+            if (gridData) {
+                const val = pollutant === 'pm25' ? gridData.pm25 : gridData.pm10;
+                
+                const rectangle = L.rectangle(
+                    [[lat, lng], [lat + 0.5, lng + 0.5]], 
+                    {
+                        color: 'transparent',
+                        fillColor: getColorForPM(val),
+                        fillOpacity: 0.6, // Sophisticated translucency
+                        weight: 0
                     }
-                }
+                ).addTo(map);
+
+                // Professional Hover Effect
+                rectangle.on('mouseover', function (e) {
+                    this.setStyle({ fillOpacity: 0.9, color: '#ffffff', weight: 1 });
+                    this.openPopup();
+                });
+
+                rectangle.on('mouseout', function (e) {
+                    this.setStyle({ fillOpacity: 0.6, color: 'transparent', weight: 0 });
+                });
+
+                const popupHtml = `
+                    <div class="popup-title">Spatial Cell [${lat}, ${lng}]</div>
+                    <div style="font-size: 0.8rem">
+                        <b>PM2.5:</b> ${gridData.pm25} μg/m³<br>
+                        <b>PM10:</b> ${gridData.pm10} μg/m³<br>
+                        <span style="color:var(--accent)">● Predicted via Satellite</span>
+                    </div>
+                `;
+                rectangle.bindPopup(popupHtml);
+                gridRectangles.push(rectangle);
             }
         }
-
-        // Update map info panel
-        function updateMapInfo(gridData) {
-            document.getElementById('selected-grid').textContent = `${gridData.lat.toFixed(1)}°N, ${gridData.lng.toFixed(1)}°E`;
-            document.getElementById('selected-pm25').textContent = `${gridData.pm25} μg/m³`;
-            document.getElementById('selected-pm10').textContent = `${gridData.pm10} μg/m³`;
-            document.getElementById('selected-source').textContent = gridData.source;
-        }
-
-        // Update heatmap function
-        function updateHeatmap() {
-            const pollutant = document.getElementById('pollutant').value;
-            const dataSource = document.getElementById('data-source').value;
-           const selectedDate = document.getElementById('date').value;
-console.log('Updating heatmap with:', { pollutant, dataSource, selectedDate });
- 
-            // Generate new data (in real app, this would be an API call)
-            currentData = generateMockData();
-            createGridRectangles();
-            
-            // Update source in info panel
-            document.getElementById('selected-source').textContent = dataSource;
-        }
-
-        // Initialize the map on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set current date/time
-           const today = new Date().toISOString().slice(0, 10);
-document.getElementById('date').value = today;
- 
-            // Load initial data
-            updateHeatmap();
-        });
-
-        // Navigation functions
-        document.querySelectorAll('.nav-btn').forEach(btn => {
-            btn.addEventListener('click', function(e) {
-                e.preventDefault();
-                const text = this.textContent;
-                if (text.includes('Home')) {
-                    alert('Navigate to Home page');
-                } else if (text.includes('Regional')) {
-                    alert('Navigate to Regional Analysis page');
-                } else if (text.includes('Compare')) {
-                    alert('Navigate to Comparison page');
-                }
-            });
-        });
-       
+    }
+}

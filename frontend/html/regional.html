@@ -3,267 +3,255 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PolluTrack - Regional Analysis</title>
- <link rel="stylesheet" href="/PolluTrack-/frontend/css/regional.css">
+    <title>PolluTrack | Regional Intelligence</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #10b981;
+            --bg: #f8fafc;
+            --white: #ffffff;
+            --border: #e2e8f0;
+            --text-muted: #64748b;
+            --card-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        body { background-color: var(--bg); color: var(--primary); line-height: 1.6; padding-top: 80px; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+
+        /* --- Header --- */
+        header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            position: fixed; width: 100%; top: 0; z-index: 1000;
+            border-bottom: 1px solid var(--border);
+        }
+        .header-content { height: 70px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.2rem; font-weight: 800; text-decoration: none; color: var(--primary); }
+        .logo span { color: var(--accent); }
+
+        /* --- Hero Section --- */
+        .regional-hero { padding: 4rem 0 2rem; }
+        .regional-hero h1 { font-size: 2.5rem; font-weight: 800; letter-spacing: -1.5px; margin-bottom: 0.5rem; }
+        .regional-hero p { color: var(--text-muted); font-size: 1.1rem; }
+
+        /* --- Preferences Control Strip --- */
+        .control-strip {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 16px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr) auto;
+            gap: 1.5rem;
+            align-items: end;
+            border: 1px solid var(--border);
+            box-shadow: var(--card-shadow);
+            margin-bottom: 3rem;
+        }
+
+        .pref-group label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: #94a3b8;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+        }
+
+        select {
+            width: 100%;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background: #f8fafc;
+            font-size: 0.9rem;
+            font-weight: 500;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 8px;
+            border: none;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        .btn-primary:hover { background: var(--accent); transform: translateY(-2px); }
+
+        /* --- City Grid --- */
+        .city-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .city-card {
+            background: var(--white);
+            padding: 1.5rem;
+            border-radius: 20px;
+            border: 1px solid var(--border);
+            transition: 0.3s;
+        }
+
+        .city-card:hover { border-color: var(--accent); transform: translateY(-5px); }
+        .city-card h4 { font-size: 0.8rem; text-transform: uppercase; color: var(--text-muted); margin-bottom: 0.5rem; }
+        .city-card .val { font-size: 2rem; font-weight: 800; display: block; }
+        
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 6px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            margin-top: 10px;
+        }
+        .good { background: #dcfce7; color: #166534; }
+        .moderate { background: #fef9c3; color: #854d0e; }
+        .unhealthy { background: #fee2e2; color: #991b1b; }
+
+        /* --- Data Table --- */
+        .card-table {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2rem;
+            border: 1px solid var(--border);
+            overflow: hidden;
+        }
+        table { width: 100%; border-collapse: collapse; text-align: left; }
+        th { font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; padding: 1rem; border-bottom: 1px solid var(--bg); }
+        td { padding: 1rem; font-size: 0.9rem; border-bottom: 1px solid var(--bg); }
+
+        #datetime { font-weight: 600; color: var(--accent); font-size: 0.85rem; }
+    </style>
 </head>
 <body>
+
     <header>
         <div class="container">
             <div class="header-content">
-                <a href="#" class="logo">PolluTrack</a>
-                <nav>
-                    <ul>
-                        <li><a href="/">Home</a></li>
-                        <li><a href="#about-pm">About PM</a></li>
-                        <li><a href="#features">Features</a></li>
-                        <li><a href="#options">Get Started</a></li>
-                    </ul>
-                </nav>
+                <a href="index.html" class="logo">Pollu<span>Track</span></a>
+                <div id="datetime">Loading network time...</div>
             </div>
         </div>
     </header>
 
-    
-    <div class="datetime-display" id="datetime">
-        <div id="current-date"></div>
-        <div id="current-time"></div>
-    </div>
-    
-    <div class="regional-container">
-        <div class="regional-header">
-            <h1>📍 Regional Air Pollution Analysis</h1>
-            <p>Detailed analysis of air quality for specific states, cities, and regions across India</p>
-        </div>
-        
-        <div class="preferences-container">
-            <div class="preferences-header">
-                <h2>🎯 User Preferences</h2>
-                <p>Select your preferences to view customized pollution data</p>
+    <main class="container">
+        <section class="regional-hero">
+            <h1>Regional Intelligence</h1>
+            <p>Granular air quality analytics for Indian states and municipalities.</p>
+        </section>
+
+        <section class="control-strip">
+            <div class="pref-group">
+                <label>Target State</label>
+                <select id="stateSelect">
+                    <option value="delhi">Delhi (NCR)</option>
+                    <option value="maharashtra">Maharashtra</option>
+                    <option value="karnataka">Karnataka</option>
+                    <option value="gujarat">Gujarat</option>
+                </select>
             </div>
+            <div class="pref-group">
+                <label>Measurement</label>
+                <select id="pollutantSelect">
+                    <option value="pm25">PM 2.5 (Fine)</option>
+                    <option value="pm10">PM 10 (Coarse)</option>
+                    <!-- <option value="aqi">Real-time AQI</option> -->
+                </select>
+            </div>
+            <div class="pref-group">
+                <label>Data Fidelity</label>
+                <select id="sourceSelect">
+                    <option value="satellite">Satellite-Neural COM Ground Truth (CPCB)</option>
+                    <!-- <option value="cpcb">Ground Truth (CPCB)</option> -->
+                </select>
+            </div>
+            <button class="btn-primary" onclick="refreshData()">Sync Data</button>
+        </section>
+
+        <div class="city-grid" id="cityGrid">
+            <div class="city-card">
+                <h4>Mumbai</h4>
+                <span class="val">65</span>
+                <span class="status-badge moderate">MODERATE</span>
+            </div>
+            <div class="city-card">
+                <h4>New Delhi</h4>
+                <span class="val">184</span>
+                <span class="status-badge unhealthy">POOR</span>
+            </div>
+            <div class="city-card">
+                <h4>Bengaluru</h4>
+                <span class="val">38</span>
+                <span class="status-badge good">HEALTHY</span>
+            </div>
+            <div class="city-card">
+                <h4>Ahmedabad</h4>
+                <span class="val">92</span>
+                <span class="status-badge moderate">MODERATE</span>
+            </div>
+        </div>
+
+        <div class="card-table">
+            <h3 style="margin-bottom: 1.5rem; font-weight: 800;">Location Breakdown</h3>
             
-            <div class="preferences-grid">
-                <div class="preference-group">
-                    <label for="state">🏛️ Select State:</label>
-                    <select id="state">
-                        <option value="">Choose a state...</option>
-                        <option value="delhi">Delhi</option>
-                        <option value="maharashtra">Maharashtra</option>
-                        <option value="uttar-pradesh">Uttar Pradesh</option>
-                        <option value="gujarat">Gujarat</option>
-                        <option value="karnataka">Karnataka</option>
-                        <option value="west-bengal">West Bengal</option>
-                        <option value="rajasthan">Rajasthan</option>
-                        <option value="punjab">Punjab</option>
-                        <option value="tamil-nadu">Tamil Nadu</option>
-                        <option value="haryana">Haryana</option>
-                        <option value="bihar">Bihar</option>
-                        <option value="madhya-pradesh">Madhya Pradesh</option>
-                    </select>
-                </div>
-                
-                <div class="preference-group">
-                    <label for="pollutant-type">🌬️ Pollutant Type:</label>
-                    <select id="pollutant-type">
-                        <option value="pm25">PM2.5</option>
-                        <option value="pm10">PM10</option>
-                        <option value="both">Both PM2.5 & PM10</option>
-                        <option value="aqi">Overall AQI</option>
-                    </select>
-                </div>
-                
-               
-                
-                <div class="preference-group">
-                    <label for="data-source">📊 Data Source:</label>
-                    <select id="data-source">
-                        <option value="cpcb">CPCB Official</option>
-                        <option value="satellite">Satellite Data</option>
-                        <option value="combined">Combined Sources</option>
-                    </select>
-                </div>
-            </div>
-            
-            <div class="selection-summary" id="selection-summary" style="display: none;">
-                <h4>📋 Current Selection</h4>
-                <p id="summary-text">Please select your preferences above</p>
-            </div>
-            
-            <div class="heatmap-section">
-                <button class="show-heatmap-btn" id="show-heatmap" disabled>
-                    🗺️ Show Heatmap
-                </button>
-            </div>
-        </div>
-        
-        <div class="analysis-grid">
-            <div class="analysis-card">
-                <h3>📊 Current Pollution Levels</h3>
-                <div class="chart-placeholder">
-                    <div>
-                        <h4>Real-time Data Chart</h4>
-                        <p>Select preferences to view data</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="analysis-card">
-            <h3>🏙️ City Comparison</h3>
-            <div class="city-comparison">
-                <div class="city-card">
-                    <h4>Mumbai</h4>
-                    <div class="pollution-level level-moderate">65 μg/m³</div>
-                    <div>PM2.5 - Moderate</div>
-                </div>
-                <div class="city-card">
-                    <h4>Delhi</h4>
-                    <div class="pollution-level level-unhealthy">142 μg/m³</div>
-                    <div>PM2.5 - Unhealthy</div>
-                </div>
-                <div class="city-card">
-                    <h4>Bangalore</h4>
-                    <div class="pollution-level level-good">38 μg/m³</div>
-                    <div>PM2.5 - Good</div>
-                </div>
-                <div class="city-card">
-                    <h4>Kolkata</h4>
-                    <div class="pollution-level level-moderate">78 μg/m³</div>
-                    <div>PM2.5 - Moderate</div>
-                </div>
-            </div>
-        </div>
-        
-        <div class="analysis-card">
-            <h3>📋 Detailed Data Table</h3>
-            <table class="data-table">
+            <table>
                 <thead>
                     <tr>
-                        <th>Location</th>
-                        <th>PM2.5 (μg/m³)</th>
-                        <th>PM10 (μg/m³)</th>
-                        <th>AQI</th>
-                        <th>Category</th>
-                        <th>Last Updated</th>
+                        <th>Station Name</th>
+                        <th>PM2.5</th>
+                        <th>PM10</th>
+                        <th>Status</th>
+                        <th>Fidelity</th>
                     </tr>
                 </thead>
-                <tbody>
+                <tbody id="dataTableBody">
                     <tr>
                         <td>Mumbai Central</td>
                         <td>65</td>
                         <td>95</td>
-                        <td>112</td>
-                        <td>Moderate</td>
-                        <td>2 hours ago</td>
+                        <td><span class="status-badge moderate">Moderate</span></td>
+                        <td>94% Match</td>
                     </tr>
                     <tr>
-                        <td>Delhi CP</td>
-                        <td>142</td>
-                        <td>198</td>
-                        <td>187</td>
-                        <td>Unhealthy</td>
-                        <td>1 hour ago</td>
-                    </tr>
-                    <tr>
-                        <td>Bangalore HSR</td>
-                        <td>38</td>
-                        <td>62</td>
-                        <td>76</td>
-                        <td>Good</td>
-                        <td>30 mins ago</td>
+                        <td>Delhi - Anand Vihar</td>
+                        <td>242</td>
+                        <td>310</td>
+                        <td><span class="status-badge unhealthy">Severe</span></td>
+                        <td>91% Match</td>
                     </tr>
                 </tbody>
             </table>
         </div>
-    </div>
-    
+    </main>
+
     <script>
-        // Update date and time
-        function updateDateTime() {
+        function updateTime() {
             const now = new Date();
-            const dateOptions = { 
-                weekday: 'long', 
-                year: 'numeric', 
-                month: 'long', 
-                day: 'numeric' 
-            };
-            const timeOptions = { 
-                hour: '2-digit', 
-                minute: '2-digit', 
-                second: '2-digit',
-                hour12: true
-            };
-            
-            document.getElementById('current-date').textContent = now.toLocaleDateString('en-IN', dateOptions);
-            document.getElementById('current-time').textContent = now.toLocaleTimeString('en-IN', timeOptions);
-        }
-        
-        // Update every second
-        setInterval(updateDateTime, 1000);
-        updateDateTime();
-        
-        // Add event listeners for dropdowns
-        const stateSelect = document.getElementById('state');
-        const pollutantSelect = document.getElementById('pollutant-type');
-       
-        const dataSourceSelect = document.getElementById('data-source');
-        const heatmapBtn = document.getElementById('show-heatmap');
-        const summaryDiv = document.getElementById('selection-summary');
-        const summaryText = document.getElementById('summary-text');
-        
-      function updateSelectionSummary() {
-    const state = stateSelect.value;
-    const pollutant = pollutantSelect.value;
-    const dataSource = dataSourceSelect.value;
-
-    if (state) {
-        const stateText = stateSelect.options[stateSelect.selectedIndex].text;
-        const pollutantText = pollutantSelect.options[pollutantSelect.selectedIndex].text;
-        const dataSourceText = dataSourceSelect.options[dataSourceSelect.selectedIndex].text;
-
-        summaryText.innerHTML = `
-            <strong>State:</strong> ${stateText} | 
-            <strong>Pollutant:</strong> ${pollutantText} | 
-            <strong>Data Source:</strong> ${dataSourceText}
-        `;
-        summaryDiv.style.display = 'block';
-        heatmapBtn.disabled = false;
-    } else {
-        summaryDiv.style.display = 'none';
-        heatmapBtn.disabled = true;
-    }
-}
-
-        
-        stateSelect.addEventListener('change', updateSelectionSummary);
-        pollutantSelect.addEventListener('change', updateSelectionSummary);
-        dataSourceSelect.addEventListener('change', updateSelectionSummary);
-heatmapBtn.addEventListener('click', function() {
-    const state = stateSelect.value;
-    const pollutant = pollutantSelect.value;
-    const dataSource = dataSourceSelect.value;
-
-    if (state) {
-        this.textContent = '🔄 Loading Heatmap...';
-        this.disabled = true;
-
-        setTimeout(() => {
-            this.textContent = '🗺️ Show Heatmap';
-            this.disabled = false;
-
-            console.log('Showing heatmap for:', {
-                state: state,
-                pollutant: pollutant,
-                dataSource: dataSource
+            document.getElementById('datetime').textContent = now.toLocaleString('en-IN', { 
+                hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: true, day: 'numeric', month: 'short'
             });
+        }
+        setInterval(updateTime, 1000);
+        updateTime();
 
-            alert(`Heatmap will be displayed for ${stateSelect.options[stateSelect.selectedIndex].text} showing ${pollutantSelect.options[pollutantSelect.selectedIndex].text} data.`);
-        }, 2000);
-    }
-});
-
-        
-        // Initialize
-        updateSelectionSummary();
+        function refreshData() {
+            const btn = document.querySelector('.btn-primary');
+            btn.textContent = 'Syncing...';
+            setTimeout(() => {
+                btn.textContent = 'Sync Data';
+                alert('Regional data re-calibrated for selected preferences.');
+            }, 800);
+        }
     </script>
 </body>
 </html>

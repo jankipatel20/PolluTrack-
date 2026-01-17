@@ -3,21 +3,101 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PolluTrack - Real-time Air Pollution Monitoring</title>
-   <link rel="stylesheet" href="/PolluTrack-/frontend/css/index.css">
-    <script src="/PolluTrack-/frontend/js/index.js"></script>
+    <title>PolluTrack | Advanced Air Quality Analytics</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --accent: #10b981;
+            --accent-soft: rgba(16, 185, 129, 0.1);
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --bg: #f8fafc;
+            --white: #ffffff;
+            --card-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05);
+            --transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Inter', sans-serif; }
+        html { scroll-behavior: smooth; }
+        body { background-color: var(--bg); color: var(--text-main); line-height: 1.6; }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+
+        /* --- NAVIGATION --- */
+        header {
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(15px);
+            position: fixed; width: 100%; top: 0; z-index: 1000;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .header-content { height: 80px; display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-size: 1.4rem; font-weight: 800; color: var(--primary); text-decoration: none; letter-spacing: -1px; }
+        .logo span { color: var(--accent); }
+        nav ul { display: flex; gap: 2.5rem; list-style: none; }
+        nav a { text-decoration: none; color: var(--text-main); font-weight: 500; font-size: 0.9rem; opacity: 0.7; transition: var(--transition); }
+        nav a:hover { opacity: 1; color: var(--accent); }
+
+        /* --- HERO --- */
+        .hero { padding: 200px 0 120px; text-align: center; background: radial-gradient(circle at 80% 20%, var(--accent-soft), transparent 25%); }
+        .hero h1 { font-size: 4.5rem; font-weight: 800; letter-spacing: -3px; line-height: 1; margin-bottom: 1.5rem; }
+        .hero p { font-size: 1.25rem; color: var(--text-muted); max-width: 700px; margin: 0 auto 3rem; }
+
+        /* --- FEATURES SECTION --- */
+        .section-tag { color: var(--accent); font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; display: block; margin-bottom: 1rem; text-align: center; }
+        .section-title { font-size: 2.5rem; font-weight: 800; text-align: center; margin-bottom: 4rem; letter-spacing: -1px; }
+
+        .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+        .feature-card { background: var(--white); padding: 3rem 2rem; border-radius: 24px; transition: var(--transition); border: 1px solid rgba(0,0,0,0.02); }
+        .feature-card:hover { transform: translateY(-10px); box-shadow: var(--card-shadow); border-color: var(--accent-soft); }
+        .icon-box { width: 50px; height: 50px; background: var(--accent-soft); border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; margin-bottom: 1.5rem; color: var(--accent); }
+        .feature-card h3 { margin-bottom: 1rem; font-size: 1.25rem; }
+        .feature-card p { color: var(--text-muted); font-size: 0.95rem; }
+
+        /* --- ABOUT PM (DATA GRID) --- */
+        .about-pm { padding: 100px 0; background: #f1f5f9; }
+        .pm-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-top: 2rem; }
+        .pm-data-card { background: var(--white); padding: 2.5rem; border-radius: 16px; display: flex; flex-direction: column; gap: 1rem; }
+        .pm-badge { display: inline-block; padding: 4px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; width: fit-content; }
+        .pm-25 { background: #fee2e2; color: #ef4444; }
+        .pm-10 { background: #fef3c7; color: #d97706; }
+
+        /* --- OPTIONS (PORTAL) --- */
+        .user-options { padding: 120px 0; text-align: center; }
+        .option-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; margin: 4rem 0; }
+        .option-card { 
+            background: var(--white); padding: 2.5rem; border-radius: 20px; cursor: pointer; border: 2px solid transparent; 
+            transition: var(--transition); text-align: left; position: relative;
+        }
+        .option-card:hover { border-color: #e2e8f0; }
+        .option-card.selected { border-color: var(--accent); background: #f0fdf4; }
+        .option-card h3 { margin-bottom: 1rem; }
+        .option-list { list-style: none; margin-top: 1.5rem; font-size: 0.85rem; color: var(--text-muted); }
+        .option-list li { margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px; }
+        .option-list li::before { content: "→"; color: var(--accent); }
+
+        .proceed-btn {
+            background: #cbd5e1; color: var(--white); border: none; padding: 1.2rem 4rem; 
+            border-radius: 12px; font-weight: 700; font-size: 1rem; cursor: not-allowed; transition: var(--transition);
+        }
+        .proceed-btn.active { background: var(--primary); cursor: pointer; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.2); }
+        .proceed-btn.active:hover { transform: scale(1.02); background: var(--accent); }
+
+        footer { padding: 4rem 0; border-top: 1px solid #e2e8f0; text-align: center; color: var(--text-muted); font-size: 0.9rem; }
+    </style>
 </head>
 <body>
+
     <header>
         <div class="container">
             <div class="header-content">
-                <a href="#" class="logo">PolluTrack</a>
+                <a href="#" class="logo">Pollu<span>Track</span></a>
                 <nav>
                     <ul>
-                        <li><a href="/">Home</a></li>
+                        <li><a href="#home">Home</a></li>
                         <li><a href="#features">Features</a></li>
-                        <li><a href="#about-pm">About PM</a></li>
-                        <li><a href="#options">Get Started</a></li>
+                        <li><a href="#about-pm">Intelligence</a></li>
+                        <li><a href="#options">Portal</a></li>
                     </ul>
                 </nav>
             </div>
@@ -26,62 +106,49 @@
 
     <section id="home" class="hero">
         <div class="container">
-            <div class="hero-content">
-                <h1>PolluTrack</h1>
-                <p>Real-time Air Pollution Monitoring across India using Advanced Satellite Technology and Machine Learning</p>
-                <a href="#options" class="cta-button">Start Monitoring</a>
-            </div>
+            <span class="section-tag">National Air Monitoring</span>
+            <h1>Real-time Air Analytics. <br>Driven by AI.</h1>
+            <p>Leveraging INSAT-3D satellite telemetry and ground-truth validation to provide the most accurate pollution mapping across India.</p>
+            <a href="#options" class="cta-button" style="text-decoration:none; background: var(--primary); color: white; padding: 1rem 2.5rem; border-radius: 8px; font-weight: 600;">Get Started</a>
         </div>
     </section>
 
-    <section id="features" class="features">
-        <div class="container">
-            <h2 style="text-align: center; font-size: 2.5rem; margin-bottom: 1rem; color: #333;">What PolluTrack Does</h2>
-            <p style="text-align: center; font-size: 1.2rem; color: #666; max-width: 800px; margin: 0 auto;">
-                PolluTrack combines satellite data with ground measurements to provide comprehensive air quality monitoring across India
-            </p>
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">🛰️</div>
-                    <h3>Satellite Monitoring</h3>
-                    <p>Uses INSAT 3D satellite data to predict PM2.5 and PM10 concentrations across India with machine learning algorithms</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">📍</div>
-                    <h3>Ground Truth Validation</h3>
-                    <p>Compares satellite predictions with real ground-based measurements from CPCB network for accuracy validation</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon">🗺️</div>
-                    <h3>Interactive Maps</h3>
-                    <p>Visualize pollution levels across India with interactive heat maps, regional analysis, and historical trends</p>
-                </div>
+    <section id="features" class="container" style="padding: 100px 0;">
+        <span class="section-tag">Capabilities</span>
+        <h2 class="section-title">Why PolluTrack?</h2>
+        <div class="features-grid">
+            <div class="feature-card">
+                <div class="icon-box">📡</div>
+                <h3>Satellite Precision</h3>
+                <p>Proprietary ML models process INSAT-3D thermal and optical bands to estimate AOD (Aerosol Optical Depth) with high resolution.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-box">⚖️</div>
+                <h3>Hybrid Validation</h3>
+                <p>We sync daily with 400+ CPCB ground stations to ensure satellite predictions remain calibrated and trustworthy.</p>
+            </div>
+            <div class="feature-card">
+                <div class="icon-box">📈</div>
+                <h3>Predictive Trends</h3>
+                <p>Don't just see the now. Our forecasting models predict pollution spikes 24 hours in advance using meteorological data.</p>
             </div>
         </div>
     </section>
 
     <section id="about-pm" class="about-pm">
         <div class="container">
-            <h2>Understanding Particulate Matter (PM)</h2>
-            <p style="text-align: center; font-size: 1.2rem; max-width: 800px; margin: 0 auto;">
-                Particulate Matter consists of tiny particles suspended in the air that can be harmful to human health and the environment
-            </p>
-            <div class="pm-info">
-                <div class="pm-card">
-                    <h4>PM2.5</h4>
-                    <p>Fine particles ≤2.5 micrometers. Most dangerous as they can penetrate deep into lungs and bloodstream. Main sources: vehicle emissions, industrial processes, dust storms.</p>
+            <span class="section-tag">Scientific Context</span>
+            <h2 class="section-title">Understanding the Science</h2>
+            <div class="pm-grid">
+                <div class="pm-data-card">
+                    <span class="pm-badge pm-25">Respirable Fine Particles</span>
+                    <h3>PM 2.5</h3>
+                    <p>Particles less than 2.5 micrometers in diameter. These are significant health risks as they can bypass the nose and throat to enter the lungs and bloodstream.</p>
                 </div>
-                <div class="pm-card">
-                    <h4>PM10</h4>
-                    <p>Coarse particles ≤10 micrometers. Can cause respiratory issues. Sources include construction dust, pollen, and larger combustion particles.</p>
-                </div>
-                <div class="pm-card">
-                    <h4>Health Impact</h4>
-                    <p>High PM levels cause respiratory diseases, cardiovascular problems, and premature death. WHO guidelines: PM2.5 ≤15 μg/m³, PM10 ≤45 μg/m³.</p>
-                </div>
-                <div class="pm-card">
-                    <h4>Environmental Impact</h4>
-                    <p>Reduces visibility, affects climate by scattering sunlight, damages crops, and contributes to acid rain formation.</p>
+                <div class="pm-data-card">
+                    <span class="pm-badge pm-10">Inhalable Coarse Particles</span>
+                    <h3>PM 10</h3>
+                    <p>Larger particles typically found near roadways and dusty industries. While less mobile than PM2.5, they contribute significantly to chronic respiratory inflammation.</p>
                 </div>
             </div>
         </div>
@@ -89,55 +156,65 @@
 
     <section id="options" class="user-options">
         <div class="container">
-            <div class="options-container">
-                <h2>Choose Your Monitoring Preference</h2>
-                <p>Select how you'd like to explore air pollution data across India</p>
-                
-                <div class="option-cards">
-                    <div class="option-card" onclick="selectOption(this, 'heatmap')">
-                        <h3>🗺️ Complete India Heatmap</h3>
-                        <p>View pollution levels across entire India with interactive heat maps showing PM2.5 and PM10 concentrations</p>
-                        <div style="font-size: 0.9rem; opacity: 0.8;">
-                            ✓ Nationwide coverage<br>
-                            ✓ Satellite + Ground data<br>
-                            ✓ Real-time updates
-                        </div>
-                    </div>
-                    
-                    <div class="option-card" onclick="selectOption(this, 'regional')">
-                        <h3>📍 Regional Analysis</h3>
-                        <p>Focus on specific states, cities, or regions with detailed pollution analysis and local trends</p>
-                        <div style="font-size: 0.9rem; opacity: 0.8;">
-                            ✓ City-specific data<br>
-                            ✓ Historical trends<br>
-                            ✓ Comparison tools
-                        </div>
-                    </div>
-                    
-                    <div class="option-card" onclick="selectOption(this, 'comparison')">
-                        <h3>⚖️ Satellite vs Ground Comparison</h3>
-                        <p>Compare satellite predictions with ground measurements to see model accuracy and validation</p>
-                        <div style="font-size: 0.9rem; opacity: 0.8;">
-                            ✓ Accuracy metrics<br>
-                            ✓ Model performance<br>
-                            ✓ Validation insights
-                        </div>
-                    </div>
+            <span class="section-tag">The Portal</span>
+            <h2 class="section-title">Select Monitoring Mode</h2>
+            <div class="option-grid">
+                <div class="option-card" onclick="selectOption(this, 'heatmap')">
+                    <h3>National Heatmap</h3>
+                    <p>A macro view of the entire subcontinent's air quality layers.</p>
+                    <ul class="option-list">
+                        <li>Interactive Heat Gradient</li>
+                        <li>Satellite Overlay</li>
+                    </ul>
                 </div>
-                
-                <button class="proceed-button" onclick="proceedToMap()">
-                    Proceed to Interactive Map
-                </button>
+                <div class="option-card" onclick="selectOption(this, 'regional')">
+                    <h3>Regional Deep-dive</h3>
+                    <p>Granular data for specific states or metropolitan areas.</p>
+                    <ul class="option-list">
+                        <li>City-specific charts</li>
+                        <li>Local AQI rankings</li>
+                    </ul>
+                </div>
+                <div class="option-card" onclick="selectOption(this, 'comparison')">
+                    <h3>Model Validation</h3>
+                    <p>Compare Satellite predictions vs Ground Station reality.</p>
+                    <ul class="option-list">
+                        <li>Error margin analysis</li>
+                        <li>Real-time sensor sync</li>
+                    </ul>
+                </div>
             </div>
+            <button id="proceedBtn" class="proceed-btn" onclick="proceedToMap()">Proceed to Interactive Map</button>
         </div>
     </section>
 
     <footer>
         <div class="container">
-            <p>&copy; 2024 PolluTrack. Real-time Air Pollution Monitoring for a Cleaner India.</p>
+            <p>&copy; 2026 PolluTrack Intelligence. All rights reserved.</p>
+            <p style="margin-top: 10px; font-size: 0.75rem; opacity: 0.6;">Data provided by ISRO INSAT-3D & CPCB India.</p>
         </div>
     </footer>
 
-   
+    <script>
+        let selectedOption = null;
+
+        function selectOption(card, option) {
+            document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+            selectedOption = option;
+            
+            const btn = document.getElementById('proceedBtn');
+            btn.classList.add('active');
+        }
+
+        function proceedToMap() {
+            if (!selectedOption) return;
+            // Transition logic
+            document.body.style.opacity = '0';
+            setTimeout(() => {
+                window.location.href = `${selectedOption}.html`;
+            }, 500);
+        }
+    </script>
 </body>
 </html>
