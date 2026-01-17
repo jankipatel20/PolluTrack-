@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>PolluTrack - India Pollution Heatmap</title>
+
+  <link rel="stylesheet" href="/PolluTrack-/frontend/css/heatmap.css">
+</head>
+<body>
+  <header>
+    <div class="container">
+      <div class="header-content">
+        <a href="#" class="logo">🌍 PolluTrack</a>
+        <div class="nav-links">
+          <a href="/" class="nav-btn">🏠 Home</a>
+          <a href="reganalysis.html" class="nav-btn">📍 Regional</a>
+          <a href="compare.html" class="nav-btn">⚖️ Compare</a>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="container">
+    <div class="main-content">
+      <div class="control-panel">
+        <h2>🗺️ Heatmap Controls</h2>
+
+        <div class="control-group">
+          <label for="pollutant">Pollutant Type</label>
+          <select id="pollutant">
+            <option value="pm25">PM2.5</option>
+            <option value="pm10">PM10</option>
+          </select>
+        </div>
+
+        <div class="control-group">
+          <label for="data-source">Data Source</label>
+          <select id="data-source">
+            <option value="satellite">Satellite Predictions</option>
+            <option value="ground">Ground Measurements</option>
+            <option value="both">Both (Comparison)</option>
+          </select>
+        </div>
+
+       <div class="control-group">
+  <label for="date">Date</label>
+  <input type="date" id="date" />
+</div>
+
+        <button class="update-btn" onclick="updateHeatmap()">
+          🔄 Update Heatmap
+        </button>
+
+        <div class="legend">
+          <h3>PM Levels (μg/m³)</h3>
+<div class="legend-item">
+  <div class="legend-color" style="background: #440154; border-color: #440154;"></div>
+  <div class="legend-label">0–5: Very Low</div>
+</div>
+<div class="legend-item">
+  <div class="legend-color" style="background: #3b528b; border-color: #3b528b;"></div>
+  <div class="legend-label">6–10: Low</div>
+</div>
+<div class="legend-item">
+  <div class="legend-color" style="background: #21918c; border-color: #21918c;"></div>
+  <div class="legend-label">11–20: Moderate</div>
+</div>
+<div class="legend-item">
+  <div class="legend-color" style="background: #5ec962; border-color: #5ec962;"></div>
+  <div class="legend-label">21–30: High</div>
+</div>
+<div class="legend-item">
+  <div class="legend-color" style="background: #fde725; border-color: #fde725;"></div>
+  <div class="legend-label">31+: Very High</div>
+</div>
+</div>
+      </div>
+<div class="map-container">
+    <iframe 
+        src="india_grid_heatmap.html" 
+        width="100%" 
+        height="600" 
+        style="border: none; border-radius: 20px; box-shadow: 0 8px 32px rgba(0,0,0,0.1);">
+    </iframe>
+</div>
+
+      <!-- Removed map-container and map-info -->
+    </div>
+  </div>
+
+  <script>
+    // Initialize date input with current date
+    document.getElementById('date-time').value = new Date().toISOString().slice(0, 16);
+
+    // Basic stub for updateHeatmap function
+    function updateHeatmap() {
+      alert("Heatmap update button clicked. Map visualization is currently disabled.");
+    }
+
+    // Event Listeners
+    document.getElementById('pollutant').addEventListener('change', () => {});
+    document.getElementById('data-source').addEventListener('change', () => {});
+  </script>
+</body>
+</html>
